@@ -1,5 +1,18 @@
 #include "imports/stdlib.fc";
 
 () recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
+	int n = in_msg_body~load_uint(32);
 
+	slice ds = get_data().begin_parse();
+	int total = ds~load_uint(64);
+
+	total += n;
+
+	set_data(begin_cell().store_uint(total, 64).end_cell());
 }
+Update recv_internal function to track and update total value
+
+- Modified recv_internal to load a 32-bit integer from in_msg_body.
+- Added logic to fetch and parse persistent storage data using get_data().
+- Updated persistent storage by adding the loaded value n to the total.
+- Ensured updated total is stored back into persistent storage using set_data.
